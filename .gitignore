@@ -1,3 +1,6 @@
 venv/
 tiendAdmin.sublime-project
 tiendAdmin.sublime-workspace
+test_list.txt
+*.pyc
+__pycache__/
