@@ -12,8 +12,8 @@ class DatabaseAdapter(ABC):
 
 
 class Product:
-    def __init__(self, name, price):
-        self.id = None
+    def __init__(self, name, price, id_=None):
+        self.id = id_
         self.name = name
         self.price = price
 
@@ -32,7 +32,10 @@ class Inventory:
         self.db.add_record(product)
 
     def get_product(self, id_):
-        return self.db.get_record(id_, Product)
+        record = self.db.get_record(id_)
+        object_id, *rest_of_data = record
+        product = Product(*rest_of_data, id_=object_id)
+        return product
 
     def __contains__(self, product):
         try:
