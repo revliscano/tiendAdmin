@@ -29,6 +29,8 @@ class Inventory:
         self.db = database_adapter
 
     def add(self, product):
+        if product.id is not None:
+            raise ValueError("Product can't have an already assigned id")
         self.db.add_record(product)
 
     def get_product(self, id_):
