@@ -17,9 +17,13 @@ class InventoryTest(TestCase):
             self.inventory.add(self.product)
 
     def test_containment_checks_for_product_id(self):
-        product_with_identical_data = Product(name='foo', price=100)
+        product_with_identical_data_but_different_id = Product(
+            name='foo', price=100
+        )
         self.inventory.add(self.product)
-        self.assertFalse(product_with_identical_data in self.inventory)
+        self.assertFalse(
+            product_with_identical_data_but_different_id in self.inventory
+        )
 
 
 class InventoryWithExistingProductTest(TestCase):
