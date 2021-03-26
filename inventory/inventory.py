@@ -1,13 +1,13 @@
 from abc import ABC, abstractmethod
 
 
-class DatabaseAdapter(ABC):
+class RepositoryAdapter(ABC):
     @abstractmethod
-    def add_record(self, record):
+    def create(self, record):
         pass
 
     @abstractmethod
-    def get_record(self, id):
+    def get(self, id):
         pass
 
 
@@ -25,16 +25,16 @@ class Product:
 
 
 class Inventory:
-    def __init__(self, database_adapter):
-        self.db = database_adapter
+    def __init__(self, repository):
+        self.repository = repository
 
     def add(self, product):
         if product.id is not None:
             raise ValueError("Product can't have an already assigned id")
-        self.db.add_record(product)
+        self.repository.create(product)
 
     def get_product(self, id_):
-        record = self.db.get_record(id_)
+        record = self.repository.get(id_)
         object_id, *rest_of_data = record
         product = Product(*rest_of_data, id_=object_id)
         return product
