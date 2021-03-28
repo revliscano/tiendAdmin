@@ -25,4 +25,4 @@ class InMemoryRepository(RepositoryAdapter):
                 if stored_object[self.ID] == id_
             )
         except StopIteration:
-            raise ValueError('Object not in inventory')
+            raise LookupError('Object not in inventory')

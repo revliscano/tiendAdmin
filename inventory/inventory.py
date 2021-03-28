@@ -30,7 +30,7 @@ class Inventory:
 
     def add(self, product):
         if product.id is not None:
-            raise LookupError("Product can't have an already assigned id")
+            raise ValueError("Product can't have an already assigned id")
         self.repository.create(product)
 
     def get_product(self, id_):
@@ -42,5 +42,5 @@ class Inventory:
     def __contains__(self, product):
         try:
             return self.get_product(product.id) is not None
-        except ValueError:
+        except LookupError:
             return False

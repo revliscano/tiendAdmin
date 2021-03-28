@@ -15,7 +15,7 @@ class InventoryTest(TestCase):
 
     def test_exception_raised_when_attempt_to_add_product_with_id(self):
         self.product.id = 1
-        with self.assertRaises(LookupError):
+        with self.assertRaises(ValueError):
             self.inventory.add(self.product)
 
     def test_containment_checks_for_product_id(self):
