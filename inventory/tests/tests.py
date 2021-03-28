@@ -15,7 +15,7 @@ class InventoryTest(TestCase):
 
     def test_exception_raised_when_attempt_to_add_product_with_id(self):
         self.product.id = 1
-        with self.assertRaises(ValueError):
+        with self.assertRaises(LookupError):
             self.inventory.add(self.product)
 
     def test_containment_checks_for_product_id(self):
@@ -30,17 +30,23 @@ class InventoryTest(TestCase):
 
 class InventoryWithExistingProductTest(TestCase):
     def setUp(self):
-        self.product = Product(name='foo', price=100)
+        product = Product(name='foo', price=100)
         repository_with_existing_product = InMemoryRepository()
-        repository_with_existing_product.create(self.product)
+        repository_with_existing_product.create(product)
         self.inventory = Inventory(
             repository=repository_with_existing_product
         )
 
     def test_get_product_returns_existing_product(self):
-        returned_product = self.inventory.get_product(id_=self.product.id)
-        self.assertEqual(returned_product, self.product)
+        expected_product = Product(name='foo', price=100)
+        expected_product_id = 1
+        expected_product.id = expected_product_id
+        returned_product = self.inventory.get_product(id_=expected_product_id)
+        self.assertEqual(returned_product, expected_product)
 
     def test_get_product_returns_same_product_but_different_object(self):
-        returned_product = self.inventory.get_product(id_=self.product.id)
-        self.assertNotEqual(id(returned_product), id(self.product))
+        expected_product = Product(name='foo', price=100)
+        expected_product_id = 1
+        expected_product.id = expected_product_id
+        returned_product = self.inventory.get_product(id_=expected_product_id)
+        self.assertNotEqual(id(returned_product), id(expected_product))
