@@ -13,6 +13,13 @@ class InventoryTest(TestCase):
         self.inventory.add(self.product)
         self.assertTrue(self.product in self.inventory)
 
+    def test_exception_raised_when_product_not_found(self):
+        some_product_id_that_hasnt_been_added = 2
+        with self.assertRaises(LookupError):
+            self.inventory.get_product(
+                id_=some_product_id_that_hasnt_been_added
+            )
+
     def test_exception_raised_when_attempt_to_add_product_with_id(self):
         self.product.id = 1
         with self.assertRaises(ValueError):
