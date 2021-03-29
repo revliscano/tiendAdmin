@@ -1,16 +1,3 @@
-from abc import ABC, abstractmethod
-
-
-class RepositoryAdapter(ABC):
-    @abstractmethod
-    def create(self, record):
-        pass
-
-    @abstractmethod
-    def get(self, id):
-        pass
-
-
 class Product:
     def __init__(self, name, price, id_=None):
         self.id = id_
@@ -18,7 +5,10 @@ class Product:
         self.price = price
 
     def get_data(self):
-        return self.id, self.name, self.price
+        return dict(self.__dict__)
+
+    def get_data_values(self):
+        return self.__dict__.values()
 
     def __eq__(self, another_product):
         return self.id == another_product.id

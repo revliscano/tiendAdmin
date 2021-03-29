@@ -1,4 +1,4 @@
-from inventory.inventory import RepositoryAdapter
+from database.repository import RepositoryAdapter
 
 
 class InMemoryRepository(RepositoryAdapter):
@@ -15,7 +15,9 @@ class InMemoryRepository(RepositoryAdapter):
             else 0
         )
         object_.id = last_id + 1
-        self.records.append(object_.get_data())
+        self.records.append(
+            tuple(object_.get_data_values())
+        )
 
     def get(self, id_):
         try:
