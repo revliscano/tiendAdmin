@@ -15,8 +15,7 @@ class RepositoryAdapter(ABC):
 
 class SQLAlchemyProductRepository(RepositoryAdapter):
     def create(self, record):
-        record_data = record.get_data()
-        record_data.pop('id')
+        record_data = record.get_writable_data()
         product_table = data_access_layer.product
         result = data_access_layer.connection.execute(
             product_table.insert(),
