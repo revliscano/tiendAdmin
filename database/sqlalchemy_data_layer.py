@@ -25,5 +25,8 @@ class DataAccessLayer:
         self.metadata.create_all(self.engine)
         self.connection = self.engine.connect()
 
+    def close_connection(self):
+        self.connection.close()
+
 
 data_access_layer = DataAccessLayer()

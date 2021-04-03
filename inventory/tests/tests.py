@@ -14,7 +14,7 @@ class InventoryTest(TestCase):
         self.assertTrue(self.product in self.inventory)
 
     def test_exception_raised_when_product_not_found(self):
-        some_product_id_that_hasnt_been_added = 2
+        some_product_id_that_hasnt_been_added = 9999
         with self.assertRaises(LookupError):
             self.inventory.get_product(
                 id_=some_product_id_that_hasnt_been_added

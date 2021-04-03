@@ -21,10 +21,17 @@ class Inventory:
 
 
 class Product:
-    def __init__(self, name, price, id_=None):
+    def __init__(self,
+                 name,
+                 price,
+                 quantity=0,
+                 is_fixed_to_USD=True,
+                 id_=None):
         self.id = id_
         self.name = name
         self.price = price
+        self.quantity = quantity
+        self.is_fixed_to_USD = is_fixed_to_USD
 
     def get_data(self):
         return dict(self.__dict__)

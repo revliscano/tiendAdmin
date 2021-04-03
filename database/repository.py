@@ -9,19 +9,27 @@ class RepositoryAdapter(ABC):
         pass
 
     @abstractmethod
-    def get(self, id):
+    def get(self, id_):
         pass
 
 
 class SQLAlchemyProductRepository(RepositoryAdapter):
+
+    table = data_access_layer.product
+
     def create(self, record):
         record_data = record.get_writable_data()
-        product_table = data_access_layer.product
         result = data_access_layer.connection.execute(
-            product_table.insert(),
+            self.table.insert(),
             **record_data
         )
         record.id = result.lastrowid
 
-    def get(self, record):
-        pass
+    def get(self, id_):
+        self.table = data_access_layer.product
+        product = data_access_layer.connection.execute(
+            self.table.select().where(self.table.columns.id == id_)
+        ).first()
+        if not product:
+            raise LookupError('Object not in inventory')
+        return product._mapping.values()
