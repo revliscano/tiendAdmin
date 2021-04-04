@@ -13,6 +13,12 @@ class Inventory:
         product = Product(*rest_of_data, id_=object_id)
         return product
 
+    def get_product_by_name(self, name):
+        record = self.repository.get_by_name(name)
+        object_id, *rest_of_data = record
+        product = Product(*rest_of_data, id_=object_id)
+        return product
+
     def __contains__(self, product):
         try:
             return self.get_product(product.id) is not None

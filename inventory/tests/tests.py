@@ -1,4 +1,4 @@
-from unittest import TestCase
+from unittest import TestCase, skip
 
 from inventory.tests.fixture import InMemoryRepository
 from inventory.inventory import Product, Inventory
@@ -45,15 +45,17 @@ class InventoryWithExistingProductTest(TestCase):
         )
 
     def test_get_product_returns_existing_product(self):
-        expected_product = Product(name='foo', price=100)
         expected_product_id = 1
-        expected_product.id = expected_product_id
         returned_product = self.inventory.get_product(id_=expected_product_id)
-        self.assertEqual(returned_product, expected_product)
+        self.assertEqual(expected_product_id, returned_product.id)
+
+    def test_get_product_by_name_returns_existing_product(self):
+        expected_product_id = 1
+        returned_product = self.inventory.get_product_by_name('foo')
+        self.assertEqual(expected_product_id, returned_product.id)
 
     def test_get_product_returns_same_product_but_different_object(self):
         expected_product = Product(name='foo', price=100)
-        expected_product_id = 1
-        expected_product.id = expected_product_id
-        returned_product = self.inventory.get_product(id_=expected_product_id)
+        expected_product.id = 1
+        returned_product = self.inventory.get_product(id_=expected_product.id)
         self.assertNotEqual(id(returned_product), id(expected_product))

@@ -4,6 +4,7 @@ from database.repository import RepositoryAdapter
 class InMemoryRepository(RepositoryAdapter):
     LAST_PRODUCT = -1
     ID = 0
+    NAME = 1
 
     def __init__(self):
         self.records = []
@@ -25,6 +26,16 @@ class InMemoryRepository(RepositoryAdapter):
                 stored_object
                 for stored_object in self.records
                 if stored_object[self.ID] == id_
+            )
+        except StopIteration:
+            raise LookupError('Object not in inventory')
+
+    def get_by_name(self, name):
+        try:
+            return next(
+                stored_object
+                for stored_object in self.records
+                if stored_object[self.NAME] == name
             )
         except StopIteration:
             raise LookupError('Object not in inventory')
