@@ -17,7 +17,7 @@ class InventoryTest(TestCase):
         some_product_id_that_hasnt_been_added = 9999
         with self.assertRaises(LookupError):
             self.inventory.get_product(
-                id_=some_product_id_that_hasnt_been_added
+                which='id', equals=some_product_id_that_hasnt_been_added
             )
 
     def test_exception_raised_when_attempt_to_add_product_with_id(self):
@@ -44,18 +44,24 @@ class InventoryWithExistingProductTest(TestCase):
             repository=repository_with_existing_product
         )
 
-    def test_get_product_returns_existing_product(self):
+    def test_get_productreturns_existing_product(self):
         expected_product_id = 1
-        returned_product = self.inventory.get_product(id_=expected_product_id)
+        returned_product = self.inventory.get_product(
+            which='id', equals=expected_product_id
+        )
         self.assertEqual(expected_product_id, returned_product.id)
 
-    def test_get_product_by_name_returns_existing_product(self):
+    def test_get_product_using_name_lookup_returns_existing_product(self):
         expected_product_id = 1
-        returned_product = self.inventory.get_product_by_name('foo')
+        returned_product = self.inventory.get_product(
+            which='name', equals='foo'
+        )
         self.assertEqual(expected_product_id, returned_product.id)
 
-    def test_get_product_returns_same_product_but_different_object(self):
+    def test_get_productreturns_same_product_but_different_object(self):
         expected_product = Product(name='foo', price=100)
         expected_product.id = 1
-        returned_product = self.inventory.get_product(id_=expected_product.id)
+        returned_product = self.inventory.get_product(
+            which='id', equals=expected_product.id
+        )
         self.assertNotEqual(id(returned_product), id(expected_product))

@@ -7,21 +7,17 @@ class Inventory:
             raise ValueError("Product can't have an already assigned id")
         self.repository.create(product)
 
-    def get_product(self, id_):
-        record = self.repository.get(id_)
-        object_id, *rest_of_data = record
-        product = Product(*rest_of_data, id_=object_id)
-        return product
-
-    def get_product_by_name(self, name):
-        record = self.repository.get_by_name(name)
+    def get_product(self, which, equals):
+        record = self.repository.get(which, equals)
         object_id, *rest_of_data = record
         product = Product(*rest_of_data, id_=object_id)
         return product
 
     def __contains__(self, product):
         try:
-            return self.get_product(product.id) is not None
+            return self.get_product(
+                which='id', equals=product.id
+            ) is not None
         except LookupError:
             return False
 

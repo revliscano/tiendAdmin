@@ -1,41 +1,32 @@
 from database.repository import RepositoryAdapter
 
 
+LAST_PRODUCT = -1
+
+
 class InMemoryRepository(RepositoryAdapter):
-    LAST_PRODUCT = -1
-    ID = 0
-    NAME = 1
 
     def __init__(self):
         self.records = []
 
     def create(self, object_):
         last_id = (
-            self.records[self.LAST_PRODUCT].id
+            self.records[LAST_PRODUCT].id
             if self.records
             else 0
         )
         object_.id = last_id + 1
         self.records.append(
-            tuple(object_.get_data_values())
+            object_.get_data()
         )
 
-    def get(self, id_):
+    def get(self, field_name, value):
         try:
-            return next(
-                stored_object
-                for stored_object in self.records
-                if stored_object[self.ID] == id_
+            record_data = next(
+                record
+                for record in self.records
+                if record[field_name] == value
             )
-        except StopIteration:
-            raise LookupError('Object not in inventory')
-
-    def get_by_name(self, name):
-        try:
-            return next(
-                stored_object
-                for stored_object in self.records
-                if stored_object[self.NAME] == name
-            )
+            return record_data.values()
         except StopIteration:
             raise LookupError('Object not in inventory')
