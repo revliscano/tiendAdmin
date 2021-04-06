@@ -44,7 +44,7 @@ class InventoryWithExistingProductTest(TestCase):
             repository=repository_with_existing_product
         )
 
-    def test_get_productreturns_existing_product(self):
+    def test_get_product_returns_existing_product(self):
         expected_product_id = 1
         returned_product = self.inventory.get_product(
             which='id', equals=expected_product_id
