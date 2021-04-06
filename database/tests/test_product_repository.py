@@ -21,13 +21,13 @@ class SQLAlchemyProductRepositoryTest(TestCase):
         self.assertIsNotNone(product.id)
 
     def test_get_method_returns_expected_product_data(self):
-        expected_product_name, expected_product_price = 'Some Product', 1000
+        expected_product_name, expected_product_price = 'Existing Product', 1000
         product_data = self.repository.get(field_name='id', value=1)
         self.assertIn(expected_product_name, product_data)
         self.assertIn(expected_product_price, product_data)
 
     def test_get_method_returns_expected_product_data_when_passed_name(self):
-        expected_product_name, expected_product_price = 'Some Product', 1000
+        expected_product_name, expected_product_price = 'Existing Product', 1000
         product_data = self.repository.get(
             field_name='name',
             value=expected_product_name
