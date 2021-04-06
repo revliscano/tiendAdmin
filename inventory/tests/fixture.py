@@ -6,7 +6,7 @@ LAST_PRODUCT = -1
 
 
 def load_repository_with_existing_product():
-    product = Product(name='Existing Product', price=1000)
+    product = Product(name='Existing Product', price=100)
     repository = InMemoryRepository()
     repository.create(product)
     return repository

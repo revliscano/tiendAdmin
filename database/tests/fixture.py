@@ -6,5 +6,5 @@ def populate_database_with_products():
     data_access_layer.connection.execute(
         product_table.insert(),
         name='Existing Product',
-        price=1000
+        price=100
     )
