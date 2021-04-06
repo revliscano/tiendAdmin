@@ -59,9 +59,9 @@ class InventoryWithExistingProductTest(TestCase):
         self.assertEqual(expected_product_id, returned_product.id)
 
     def test_get_productreturns_same_product_but_different_object(self):
-        expected_product = Product(name='foo', price=100)
-        expected_product.id = 1
+        product = Product(name='bar', price=100)
+        self.inventory.add(product)
         returned_product = self.inventory.get_product(
-            which='id', equals=expected_product.id
+            which='id', equals=product.id
         )
-        self.assertNotEqual(id(returned_product), id(expected_product))
+        self.assertNotEqual(id(returned_product), id(product))

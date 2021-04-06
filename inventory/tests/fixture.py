@@ -11,7 +11,7 @@ class InMemoryRepository(RepositoryAdapter):
 
     def create(self, object_):
         last_id = (
-            self.records[LAST_PRODUCT].id
+            self.records[LAST_PRODUCT]['id']
             if self.records
             else 0
         )
