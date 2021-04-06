@@ -25,10 +25,10 @@ class SQLAlchemyProductRepository(RepositoryAdapter):
         )
         record.id = result.lastrowid
 
-    def get(self, id_):
-        self.table = data_access_layer.product
+    def get(self, field_name, value):
+        field = getattr(self.table.columns, field_name)
         product = data_access_layer.connection.execute(
-            self.table.select().where(self.table.columns.id == id_)
+            self.table.select().where(field == value)
         ).first()
         if not product:
             raise LookupError('Object not in inventory')
