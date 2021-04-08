@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from inventory.tests.fixture import (
     InMemoryRepository,
-    load_repository_with_existing_product
+    load_repository_with_existing_products
 )
 from inventory.inventory import Product, Inventory
 
@@ -37,7 +37,7 @@ class InventoryTest(TestCase):
             product_with_identical_data_but_different_id in self.inventory
         )
 
-    def test_get_productreturns_same_product_but_different_object(self):
+    def test_getproduct_returns_same_product_but_different_object(self):
         product = Product(name='New Product', price=1)
         self.inventory.add(product)
         returned_product = self.inventory.get_product(
@@ -48,21 +48,27 @@ class InventoryTest(TestCase):
 
 class InventoryWithExistingProductTest(TestCase):
     def setUp(self):
-        repository = load_repository_with_existing_product()
+        repository = load_repository_with_existing_products()
         self.inventory = Inventory(
             repository=repository
         )
 
-    def test_get_product_returns_existing_product(self):
+    def test_getproduct_returns_existing_product(self):
         expected_product_id = 1
         returned_product = self.inventory.get_product(
             which='id', equals=expected_product_id
         )
         self.assertEqual(expected_product_id, returned_product.id)
 
-    def test_get_product_using_name_lookup_returns_existing_product(self):
+    def test_getproduct_using_name_field_returns_existing_product(self):
         expected_product_id = 1
         returned_product = self.inventory.get_product(
             which='name', equals='Existing Product'
         )
         self.assertEqual(expected_product_id, returned_product.id)
+
+    def test_exception_raised_if_getproduct_match_more_than_one_product(self):
+        with self.assertRaises(LookupError):
+            self.inventory.get_product(
+                which='name', equals='Duplicated Product'
+            )

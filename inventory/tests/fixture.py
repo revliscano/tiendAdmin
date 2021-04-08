@@ -5,10 +5,11 @@ from inventory.inventory import Product
 LAST_PRODUCT = -1
 
 
-def load_repository_with_existing_product():
-    product = Product(name='Existing Product', price=100)
+def load_repository_with_existing_products():
     repository = InMemoryRepository()
-    repository.create(product)
+    repository.create(Product(name='Existing Product', price=100))
+    repository.create(Product(name='Duplicated Product', price=200))
+    repository.create(Product(name='Duplicated Product', price=200))
     return repository
 
 
@@ -30,11 +31,17 @@ class InMemoryRepository(RepositoryAdapter):
 
     def get(self, field_name, value):
         try:
-            record_data = next(
+            matching_records = (
                 record
                 for record in self.records
                 if record[field_name] == value
             )
-            return record_data.values()
+            record_data = next(matching_records).values()
+            if next(matching_records, False):
+                raise LookupError(
+                    'There is more than one object '
+                    'matching given criteria'
+                )
+            return record_data
         except StopIteration:
             raise LookupError('Object not in inventory')
