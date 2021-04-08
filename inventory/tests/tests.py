@@ -37,6 +37,14 @@ class InventoryTest(TestCase):
             product_with_identical_data_but_different_id in self.inventory
         )
 
+    def test_get_productreturns_same_product_but_different_object(self):
+        product = Product(name='New Product', price=1)
+        self.inventory.add(product)
+        returned_product = self.inventory.get_product(
+            which='id', equals=product.id
+        )
+        self.assertNotEqual(id(returned_product), id(product))
+
 
 class InventoryWithExistingProductTest(TestCase):
     def setUp(self):
@@ -58,11 +66,3 @@ class InventoryWithExistingProductTest(TestCase):
             which='name', equals='Existing Product'
         )
         self.assertEqual(expected_product_id, returned_product.id)
-
-    def test_get_productreturns_same_product_but_different_object(self):
-        product = Product(name='New Product', price=1)
-        self.inventory.add(product)
-        returned_product = self.inventory.get_product(
-            which='id', equals=product.id
-        )
-        self.assertNotEqual(id(returned_product), id(product))
