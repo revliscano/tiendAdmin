@@ -8,3 +8,13 @@ def populate_database_with_products():
         name='Existing Product',
         price=100
     )
+    data_access_layer.connection.execute(
+        product_table.insert(),
+        name='Duplicated Product',
+        price=200
+    )
+    data_access_layer.connection.execute(
+        product_table.insert(),
+        name='Duplicated Product',
+        price=200
+    )

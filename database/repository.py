@@ -27,9 +27,17 @@ class SQLAlchemyProductRepository(RepositoryAdapter):
 
     def get(self, field_name, value):
         field = getattr(self.table.columns, field_name)
-        product = data_access_layer.connection.execute(
+        result = data_access_layer.connection.execute(
             self.table.select().where(field == value)
-        ).first()
-        if not product:
+        ).fetchmany(2)
+        self._validate_fetched(result)
+        return result[0]._mapping.values()
+
+    def _validate_fetched(self, result):
+        if not result:
             raise LookupError('Object not in inventory')
-        return product._mapping.values()
+        if len(result) > 1:
+            raise LookupError(
+                'There is more than one object '
+                'matching given criteria'
+            )

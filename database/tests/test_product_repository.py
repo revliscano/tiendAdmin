@@ -35,6 +35,13 @@ class SQLAlchemyProductRepositoryTest(TestCase):
         self.assertIn(expected_product_name, product_data)
         self.assertIn(expected_product_price, product_data)
 
+    def test_get_method_raises_exception_if_finds_more_than_one_row(self):
+        with self.assertRaises(LookupError):
+            self.repository.get(
+                field_name='name',
+                value='Duplicated Product'
+            )
+
     @classmethod
     def tearDownClass(class_):
         data_access_layer.close_connection()
