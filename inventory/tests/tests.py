@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from inventory.tests.fixture import (
     InMemoryRepository,
-    load_repository_with_existing_products
+    load_inmemoryrepository_with_existing_products
 )
 from inventory.inventory import Product, Inventory
 
@@ -48,7 +48,7 @@ class InventoryTest(TestCase):
 
 class InventoryWithExistingProductTest(TestCase):
     def setUp(self):
-        repository = load_repository_with_existing_products()
+        repository = load_inmemoryrepository_with_existing_products()
         self.inventory = Inventory(
             repository=repository
         )

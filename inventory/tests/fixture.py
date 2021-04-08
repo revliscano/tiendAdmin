@@ -5,7 +5,7 @@ from inventory.inventory import Product
 LAST_PRODUCT = -1
 
 
-def load_repository_with_existing_products():
+def load_inmemoryrepository_with_existing_products():
     repository = InMemoryRepository()
     repository.create(Product(name='Existing Product', price=100))
     repository.create(Product(name='Duplicated Product', price=200))
