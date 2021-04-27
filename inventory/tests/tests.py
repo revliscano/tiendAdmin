@@ -45,6 +45,17 @@ class InventoryTest(TestCase):
         )
         self.assertNotEqual(id(returned_product), id(product))
 
+    def test_multiple_insertions_at_once(self):
+        products = [
+            Product(name='test multiple insertions 1', price=1),
+            Product(name='test multiple insertions 2', price=2),
+            Product(name='test multiple insertions 3', price=3),
+        ]
+        self.inventory.add_many(products)
+        self.assertTrue(
+            all(product in self.inventory for product in products)
+        )
+
 
 class InventoryWithExistingProductTest(TestCase):
     def setUp(self):

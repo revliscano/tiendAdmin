@@ -18,3 +18,10 @@ def populate_database_with_products():
         name='Duplicated Product',
         price=200
     )
+
+
+def clear_table():
+    table = data_access_layer.product
+    data_access_layer.connection.execute(
+        table.delete()
+    )

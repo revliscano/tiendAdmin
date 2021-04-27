@@ -12,18 +12,21 @@ class RepositoryAdapter(ABC):
     def get(self, id_):
         pass
 
+    @abstractmethod
+    def bulk_create(self, records):
+        pass
+
 
 class SQLAlchemyProductRepository(RepositoryAdapter):
 
     table = data_access_layer.product
 
     def create(self, record):
-        record_data = record.get_writable_data()
         result = data_access_layer.connection.execute(
             self.table.insert(),
-            **record_data
+            **record
         )
-        record.id = result.lastrowid
+        return result.lastrowid
 
     def get(self, field_name, value):
         field = getattr(self.table.columns, field_name)
@@ -41,3 +44,10 @@ class SQLAlchemyProductRepository(RepositoryAdapter):
                 'There is more than one object '
                 'matching given criteria'
             )
+
+    def bulk_create(self, records):
+        result = data_access_layer.connection.execute(
+            self.table.insert(),
+            records
+        )
+        return 1, 2, 3

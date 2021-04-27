@@ -3,9 +3,17 @@ class Inventory:
         self.repository = repository
 
     def add(self, product):
-        if product.id is not None:
+        if product.has_id():
             raise ValueError("Product can't have an already assigned id")
-        self.repository.create(product)
+        product_data = product.get_writable_data()
+        assigned_id = self.repository.create(product_data)
+        product.id = assigned_id
+
+    def add_many(self, products):
+        products_data = [product.get_writable_data() for product in products]
+        ids = self.repository.bulk_create(products_data)
+        for id_, product in zip(ids, products):
+            product.id = id_
 
     def get_product(self, which, equals):
         record = self.repository.get(which, equals)
@@ -34,6 +42,9 @@ class Product:
         self.price = price
         self.quantity = quantity
         self.is_fixed_to_USD = is_fixed_to_USD
+
+    def has_id(self):
+        return self.id is not None
 
     def get_data(self):
         return dict(self.__dict__)

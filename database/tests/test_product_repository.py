@@ -1,12 +1,42 @@
 from unittest import TestCase
 
-from inventory.inventory import Product
 from database.repository import SQLAlchemyProductRepository
 from database.sqlalchemy_data_layer import data_access_layer
-from database.tests.fixture import populate_database_with_products
+from database.tests.fixture import (
+    populate_database_with_products, clear_table
+)
 
 
 class SQLAlchemyProductRepositoryTest(TestCase):
+
+    @classmethod
+    def setUpClass(class_):
+        data_access_layer.db_init('sqlite:///:memory:')
+        clear_table()
+
+    def setUp(self):
+        self.repository = SQLAlchemyProductRepository()
+
+    def test_create_method_assigns_an_id_to_product(self):
+        product_data = {'name': 'foo', 'price': 1}
+        id_ = self.repository.create(record=product_data)
+        self.assertEqual(1, id_)
+
+    def test_bulkcreate_method_inserts_all_records(self):
+        records = [
+            {'name': 'test multiple insertions 1', 'price': 1},
+            {'name': 'test multiple insertions 2', 'price': 2},
+            {'name': 'test multiple insertions 3', 'price': 3},
+        ]
+        ids = self.repository.bulk_create(records)
+        self.assertEqual((1, 2, 3), ids)
+
+    def tearDown(self):
+        clear_table()
+
+
+class SQLAlchemyProductRepositoryWithPopulatedDBTest(TestCase):
+
     @classmethod
     def setUpClass(class_):
         data_access_layer.db_init('sqlite:///:memory:')
@@ -14,11 +44,6 @@ class SQLAlchemyProductRepositoryTest(TestCase):
 
     def setUp(self):
         self.repository = SQLAlchemyProductRepository()
-
-    def test_create_method_assigns_an_id_to_product(self):
-        product = Product(name='foo', price=1)
-        self.repository.create(record=product)
-        self.assertIsNotNone(product.id)
 
     def test_get_method_returns_expected_product_data(self):
         expected_product_name, expected_product_price = 'Existing Product', 100
@@ -41,7 +66,3 @@ class SQLAlchemyProductRepositoryTest(TestCase):
                 field_name='name',
                 value='Duplicated Product'
             )
-
-    @classmethod
-    def tearDownClass(class_):
-        data_access_layer.close_connection()
