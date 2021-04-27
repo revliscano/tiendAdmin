@@ -15,8 +15,8 @@ class Inventory:
         for id_, product in zip(ids, products):
             product.id = id_
 
-    def get_product(self, which, equals):
-        record = self.repository.get(which, equals)
+    def get_product(self, whose, equals):
+        record = self.repository.get(whose, equals)
         object_id, *rest_of_data = record
         product = Product(*rest_of_data, id_=object_id)
         return product
@@ -24,7 +24,7 @@ class Inventory:
     def __contains__(self, product):
         try:
             return self.get_product(
-                which='id', equals=product.id
+                whose='id', equals=product.id
             ) is not None
         except LookupError:
             return False

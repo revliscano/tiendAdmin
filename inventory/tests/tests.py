@@ -20,7 +20,7 @@ class InventoryTest(TestCase):
         some_product_id_that_hasnt_been_added = 9999
         with self.assertRaises(LookupError):
             self.inventory.get_product(
-                which='id', equals=some_product_id_that_hasnt_been_added
+                whose='id', equals=some_product_id_that_hasnt_been_added
             )
 
     def test_exception_raised_when_attempt_to_add_product_with_id(self):
@@ -41,7 +41,7 @@ class InventoryTest(TestCase):
         product = Product(name='New Product', price=1)
         self.inventory.add(product)
         returned_product = self.inventory.get_product(
-            which='id', equals=product.id
+            whose='id', equals=product.id
         )
         self.assertNotEqual(id(returned_product), id(product))
 
@@ -67,19 +67,19 @@ class InventoryWithExistingProductTest(TestCase):
     def test_getproduct_returns_existing_product(self):
         expected_product_id = 1
         returned_product = self.inventory.get_product(
-            which='id', equals=expected_product_id
+            whose='id', equals=expected_product_id
         )
         self.assertEqual(expected_product_id, returned_product.id)
 
     def test_getproduct_using_name_field_returns_existing_product(self):
         expected_product_id = 1
         returned_product = self.inventory.get_product(
-            which='name', equals='Existing Product'
+            whose='name', equals='Existing Product'
         )
         self.assertEqual(expected_product_id, returned_product.id)
 
     def test_exception_raised_if_getproduct_match_more_than_one_product(self):
         with self.assertRaises(LookupError):
             self.inventory.get_product(
-                which='name', equals='Duplicated Product'
+                whose='name', equals='Duplicated Product'
             )
