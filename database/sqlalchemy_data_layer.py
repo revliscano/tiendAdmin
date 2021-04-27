@@ -28,5 +28,16 @@ class DataAccessLayer:
     def close_connection(self):
         self.connection.close()
 
+    def get_latest_inserted_ids(self, result):
+        insertions = result.rowcount
+        raw_connection = self.engine.raw_connection()
+        cursor = raw_connection.cursor()
+        last_inserted_id, = cursor.execute(
+            'SELECT last_insert_rowid()'
+        ).fetchone()
+        return tuple(
+            range(last_inserted_id - insertions + 1, last_inserted_id + 1)
+        )
+
 
 data_access_layer = DataAccessLayer()

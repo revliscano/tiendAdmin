@@ -50,16 +50,5 @@ class SQLAlchemyProductRepository(RepositoryAdapter):
             self.table.insert(),
             records
         )
-        ids = self._get_just_inserted_ids(result)
+        ids = data_access_layer.get_latest_inserted_ids(result)
         return ids
-
-    def _get_just_inserted_ids(self, result):
-        insertions = result.rowcount
-        raw_connection = data_access_layer.engine.raw_connection()
-        cursor = raw_connection.cursor()
-        last_inserted_id, = cursor.execute(
-            'SELECT last_insert_rowid()'
-        ).fetchone()
-        return tuple(
-            range(last_inserted_id - insertions + 1, last_inserted_id + 1)
-        )

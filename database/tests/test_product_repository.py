@@ -17,12 +17,12 @@ class SQLAlchemyProductRepositoryTest(TestCase):
     def setUp(self):
         self.repository = SQLAlchemyProductRepository()
 
-    def test_create_method_assigns_an_id_to_product(self):
+    def test_create_method_returns_id(self):
         product_data = {'name': 'foo', 'price': 1}
         id_ = self.repository.create(record=product_data)
         self.assertEqual(1, id_)
 
-    def test_bulkcreate_method_inserts_all_records(self):
+    def test_bulkcreate_method_returns_ids(self):
         records = [
             {'name': 'test multiple insertions 1', 'price': 1},
             {'name': 'test multiple insertions 2', 'price': 2},
