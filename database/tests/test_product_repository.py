@@ -22,14 +22,21 @@ class SQLAlchemyProductRepositoryTest(TestCase):
         id_ = self.repository.create(record=product_data)
         self.assertEqual(1, id_)
 
-    def test_bulkcreate_method_returns_ids(self):
+    def test_bulkcreate_method_returns_expected_ids(self):
         records = [
-            {'name': 'test multiple insertions 1', 'price': 1},
-            {'name': 'test multiple insertions 2', 'price': 2},
-            {'name': 'test multiple insertions 3', 'price': 3},
+            {'name': 'test multiple insertions 1', 'price': 100},
+            {'name': 'test multiple insertions 2', 'price': 200},
+            {'name': 'test multiple insertions 3', 'price': 300},
+            {'name': 'test multiple insertions 4', 'price': 400},
+            {'name': 'test multiple insertions 5', 'price': 500},
+            {'name': 'test multiple insertions 6', 'price': 600},
         ]
-        ids = self.repository.bulk_create(records)
-        self.assertEqual((1, 2, 3), ids)
+
+        first_batch_ids = self.repository.bulk_create(records[:3])
+        second_batch_ids = self.repository.bulk_create(records[3:])
+
+        self.assertEqual((1, 2, 3), first_batch_ids)
+        self.assertEqual((4, 5, 6), second_batch_ids)
 
     def tearDown(self):
         clear_table()
