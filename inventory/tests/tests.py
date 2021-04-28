@@ -56,6 +56,15 @@ class InventoryTest(TestCase):
             all(product in self.inventory for product in products)
         )
 
+    def test_raise_exception_if_any_product_passed_to_addmany_has_id(self):
+        products = [
+            Product(name='test multiple insertions 1', price=1),
+            Product(name='test multiple insertions 2', price=2, id_=1),
+            Product(name='test multiple insertions 3', price=3),
+        ]
+        with self.assertRaises(ValueError):
+            self.inventory.add_many(products)
+
 
 class InventoryWithExistingProductTest(TestCase):
     def setUp(self):
