@@ -22,8 +22,14 @@ class SQLAlchemyProductRepositoryTest(TestCase):
         id_ = self.repository.create(record=product_data)
         self.assertEqual(1, id_)
 
-    def test_bulkcreate_method_returns_expected_ids(self):
-        records = [
+    def tearDown(self):
+        clear_table()
+
+
+class BulkCreateTest(SQLAlchemyProductRepositoryTest):
+    def setUp(self):
+        super().setUp()
+        self.records = [
             {'name': 'test multiple insertions 1', 'price': 100},
             {'name': 'test multiple insertions 2', 'price': 200},
             {'name': 'test multiple insertions 3', 'price': 300},
@@ -32,14 +38,26 @@ class SQLAlchemyProductRepositoryTest(TestCase):
             {'name': 'test multiple insertions 6', 'price': 600},
         ]
 
-        first_batch_ids = self.repository.bulk_create(records[:3])
-        second_batch_ids = self.repository.bulk_create(records[3:])
-
+    def test_returns_expected_ids(self):
+        first_batch_ids = self.repository.bulk_create(self.records[:3])
+        second_batch_ids = self.repository.bulk_create(self.records[3:])
         self.assertEqual((1, 2, 3), first_batch_ids)
         self.assertEqual((4, 5, 6), second_batch_ids)
 
-    def tearDown(self):
-        clear_table()
+    def test_get_expected_record_after_bulkcreate(self):
+        ids = self.repository.bulk_create(self.records)
+        returned_record_whose_id_should_be_1 = self.repository.get(
+            field_name='id', value=ids[0]
+        )
+        returned_record_whose_id_should_be_5 = self.repository.get(
+            field_name='id', value=ids[4]
+        )
+        self.assertIn(
+            'test multiple insertions 1', returned_record_whose_id_should_be_1
+        )
+        self.assertIn(
+            'test multiple insertions 5', returned_record_whose_id_should_be_5
+        )
 
 
 class SQLAlchemyProductRepositoryWithPopulatedDBTest(TestCase):
